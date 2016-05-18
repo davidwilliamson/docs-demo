@@ -1,0 +1,25 @@
+version: "2"
+services:
+  nginx:
+    build: ./nginx
+    networks:
+      - back-tier
+    environment:
+      NGINX_SERVER_NAME:
+    links:
+      - oauth-proxy
+    ports:
+      - 8080
+      - 443:443
+  oauth-proxy:
+    build: ./oauth2_proxy
+    networks:
+      - back-tier
+    environment:
+      OAUTH2_PROXY_CLIENT_ID:
+      OAUTH2_PROXY_CLIENT_SECRET:
+    ports:
+      - 4180
+    entrypoint: oauth2_proxy -config /var/tmp/oauth2_proxy/proxy.conf
+networks:
+    back-tier:
