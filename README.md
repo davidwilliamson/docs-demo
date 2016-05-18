@@ -8,9 +8,10 @@ Serve up static HTML files using github OAUTH to control access.
   * [docker on cloud provider](https://docs.docker.com/engine/installation/cloud/overview/)
   * [Install compose](https://docs.docker.com/compose/install/)
 
-* Create server certificates (poor man's method is to use a self-signed cert)
-  [How to create a self-signed cert on Stack overflow](http://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl)
-`openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 30`
+* Create server certificates 
+  * Poor man's method is to use a self-signed cert: [How to create a self-signed cert on Stack overflow](http://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl)
+    * `openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 30`
+    * `chmod 400 key.pem`
 * Put the certificate files in `./nginx/creds` (e.g., `cert.pem` and `key.pem`)
 
 ##App set up
