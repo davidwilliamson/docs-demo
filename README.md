@@ -19,6 +19,7 @@ Based on [this blog](http://developers.canal-plus.com/blog/2015/11/07/install-ng
     * `openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 30`
     * `chmod 400 key.pem`
 * Put the certificate files in `./nginx/creds` (e.g., `cert.pem` and `key.pem`)
+* Your host must allow incoming TCP connections on port 443 (used by the GitHub callback) from the public internet.
 
 ##App set up
 * Create an organization on github [https://github.com/settings/organizations]. Invite other GitHub users to your organization. _Everyone in the organization will be able to see the web content_
@@ -62,6 +63,7 @@ Click the GitHub button to authenticate. In GitHub, click to allow this applicat
 * All errors and warnings from the containers are directed to STDOUT and STDERR. A simple way to log to a file might be:
   * `docker-compose up > server.log 2>&1 &`
   * `tail -f server.log`
+* Check your host's firewall settings; make sure your host allows incoming connections on port 443
 
 ##Topology
 ###Components
