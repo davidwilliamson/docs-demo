@@ -18,7 +18,21 @@ Based on [this blog](http://developers.canal-plus.com/blog/2015/11/07/install-ng
   * Poor man's method is to use a self-signed cert: [How to create a self-signed cert on Stack overflow](http://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl)
     * `openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 30`
     * `chmod 400 key.pem`
-* Put the certificate files in `./nginx/creds` (e.g., `cert.pem` and `key.pem`)
+* Put the certificate files (e.g., `cert.pem` and `key.pem`) in a docker volume named 'creds'.
+```
+docker volume create --name creds
+cd <directory-where-our-credentials-are>
+# note that using --rm here means as soon as we exit, the volume is dangling.
+# docker cloud will garbage collect it immediately, destroying our work. So for cloud,
+# use --name creds-holder instead of --rm and NEVER rm the creds-holder container.
+docker run -ti --rm $PWD:/creds-in -v creds:/creds-out busybox sh`
+# inside container:
+cp /creds-in/* /creds-out/.
+ls -Fl /creds-out
+# verify
+docker run -ti --rm -v creds:/creds busybox sh
+ls /creds
+```
 * Your host must allow incoming TCP connections on port 443 (used by the GitHub callback) from the public internet.
 
 ##App set up
@@ -79,7 +93,7 @@ among the containers is on a docker private network; the only port the stack
 needs to expose to the outside world is port 443 (SSL). 
 
 The content-web-server container is assumed to be a webserver (i.e., nginx)
-Further, it MUST listen for http requests on port 80.
+Further, it MUST listen for http requests on port 8080.
 
 This container is assumed to already exist on docker hub; we will pull and start the
 image named in the `DOCS_IMAGE_NAME` environment variable. That is, if we would
@@ -89,7 +103,7 @@ pull the image with `docker pull myName/MyRepo`, then we should set
 When an incoming conneciton arrives via HTTPS, the Nginx container forwards the request 
 to the oauth2_proxy container on port 4180. The oauth2_proxy container interacts with 
 GitHub to perform authenticaiton. Assuming the authenticaiton succeeds, the oauth2_proxy
-forwards the original request to the Content Webserver on port 80. The content
+forwards the original request to the Content Webserver on port 8080. The content
 webServer returns the requested document to the client.
 
 ```

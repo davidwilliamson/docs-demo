@@ -10,8 +10,10 @@ services:
       - oauth-proxy
       - docs
     ports:
-      - 80
+      - 8080
       - 443:443
+    volumes:
+      - creds:/var/creds:ro
   oauth-proxy:
     build: ./oauth2_proxy
     networks:
@@ -28,5 +30,8 @@ services:
     networks:
       - back-tier
 
+volumes:
+  creds:
+    external: true
 networks:
     back-tier:
