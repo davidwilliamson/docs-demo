@@ -7,3 +7,6 @@
 *.tmp
 .*.swp
 .DS_Store
+
+# README describes how to create a logfile named server.log
+server.log

@@ -8,8 +8,9 @@ services:
       NGINX_SERVER_NAME:
     links:
       - oauth-proxy
+      - docs
     ports:
-      - 8080
+      - 80
       - 443:443
   oauth-proxy:
     build: ./oauth2_proxy
@@ -18,8 +19,14 @@ services:
     environment:
       OAUTH2_PROXY_CLIENT_ID:
       OAUTH2_PROXY_CLIENT_SECRET:
+      GITHUB_ORG:
     ports:
       - 4180
-    entrypoint: oauth2_proxy -config /var/tmp/oauth2_proxy/proxy.conf
+    entrypoint: oauth2_proxy -config /var/tmp/oauth2_proxy/proxy.conf -github-org=${GITHUB_ORG}
+  docs:
+    image: ${DOCS_IMAGE_NAME}
+    networks:
+      - back-tier
+
 networks:
     back-tier:

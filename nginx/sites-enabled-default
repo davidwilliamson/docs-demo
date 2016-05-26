@@ -15,12 +15,3 @@ server {
     proxy_read_timeout 30;
   }
 }
-
-server {
-  listen      8080;
-  root        /var/www;
-
-  location / {
-  	try_files $uri $uri/ index.html test.html =404;
-  }
-}

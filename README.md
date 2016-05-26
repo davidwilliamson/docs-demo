@@ -41,6 +41,8 @@ Based on [this blog](http://developers.canal-plus.com/blog/2015/11/07/install-ng
   * `export NGINX_SERVER_NAME=<host-where-this-is-running>`
   * `export OAUTH2_PROXY_CLIENT_ID=<From-GitHub-App>`
   * `export OAUTH2_PROXY_CLIENT_SECRET=<Corresponding-Secret-From-GitHub-App>`
+  * `export DOCS_IMAGE_NAME=<image-name-for-docs-webserver>`
+  * `export GITHUB_ORG=<organization-we-created-on-github>`
 
 * Now, stand up the stack
   * `docker-compose up`
@@ -72,17 +74,31 @@ Click the GitHub button to authenticate. In GitHub, click to allow this applicat
 
 The basic implementation is described in [this blog](http://developers.canal-plus.com/blog/2015/11/07/install-nginx-reverse-proxy-with-github-oauth2/)
 
+Nginx, oauth2_proxy and content webserver all run in docker containers. All communicaiton
+among the containers is on a docker private network; the only port the stack
+needs to expose to the outside world is port 443 (SSL). 
+
+The content-web-server container is assumed to be a webserver (i.e., nginx)
+Further, it MUST listen for http requests on port 80.
+
+This container is assumed to already exist on docker hub; we will pull and start the
+image named in the `DOCS_IMAGE_NAME` environment variable. That is, if we would
+pull the image with `docker pull myName/MyRepo`, then we should set 
+`export DOCS_IMAGE_NAME=myName/MyRepo`
+
+When an incoming conneciton arrives via HTTPS, the Nginx container forwards the request 
+to the oauth2_proxy container on port 4180. The oauth2_proxy container interacts with 
+GitHub to perform authenticaiton. Assuming the authenticaiton succeeds, the oauth2_proxy
+forwards the original request to the Content Webserver on port 80. The content
+webServer returns the requested document to the client.
+
 ```
-          +-------+   +--------------+
-client -->| Nginx |-->| oauth2 proxy |
-          +-------+   +--------------+
-              |              |            +--------+
-              |              +----------->| gitHub |
-              |                           +--------+
-              |
-              |       +-----------------+      +-----------+
-              +-------| docs web server |------| /foo.html |
-                      +-----------------+      +-----------+
+          +-------+   +--------------+   +-------------------+
+client -->| Nginx |-->| oauth2 proxy |-->| Content-WebServer |
+          +-------+   +--------------+   +-------------------+
+                             |            +--------+
+                             +----------->| gitHub |
+                                          +--------+
 ```
 
 ##Known issues
