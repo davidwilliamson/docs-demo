@@ -4,8 +4,6 @@ services:
     build: ./nginx
     networks:
       - back-tier
-    environment:
-      NGINX_SERVER_NAME:
     links:
       - oauth-proxy
       - docs

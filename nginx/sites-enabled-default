@@ -1,6 +1,5 @@
 server {
   listen 443 default ssl;
-  server_name $NGINX_SERVER_NAME;
   ssl_certificate /var/creds/cert.pem;
   ssl_certificate_key /var/creds/key.pem;
   add_header Strict-Transport-Security max-age=2592000;

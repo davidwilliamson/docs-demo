@@ -52,7 +52,6 @@ ls /creds
 
 ##Usage
 * Set required environment variables
-  * `export NGINX_SERVER_NAME=<host-where-this-is-running>`
   * `export OAUTH2_PROXY_CLIENT_ID=<From-GitHub-App>`
   * `export OAUTH2_PROXY_CLIENT_SECRET=<Corresponding-Secret-From-GitHub-App>`
   * `export DOCS_IMAGE_NAME=<image-name-for-docs-webserver>`
