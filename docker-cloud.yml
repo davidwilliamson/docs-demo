@@ -1,0 +1,26 @@
+docs:
+  image: 'dockertoolsapps/docs-preview:latest'
+  autoredeploy: true
+  restart: always
+nginx:
+  autoredeploy: true
+  restart: always
+  image: 'dockertoolsapps/docs-nginx:latest'
+  links:
+    - docs
+    - oauth-proxy
+  ports:
+    - '443:443'
+    - '8080'
+  volumes:
+    - '/var/lib/docker/volumes/creds/_data:/var/creds:ro'
+oauth-proxy:
+  autoredeploy: true
+  restart: always
+  entrypoint: oauth2_proxy -config /var/tmp/oauth2_proxy/proxy.conf -github-org=docksviewtest
+  environment:
+    - OAUTH2_PROXY_CLIENT_ID
+    - OAUTH2_PROXY_CLIENT_SECRET
+  image: 'dockertoolsapps/docs-oauth2-proxy:latest'
+  ports:
+    - '4180'
