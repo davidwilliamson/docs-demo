@@ -8,8 +8,8 @@ services:
       - oauth-proxy
       - docs
     ports:
-      - 8080
-      - 443:443
+      - "8080"
+      - "443:443"
     volumes:
       - creds:/var/creds:ro
   oauth-proxy:
@@ -21,7 +21,7 @@ services:
       OAUTH2_PROXY_CLIENT_SECRET:
       GITHUB_ORG:
     ports:
-      - 4180
+      - "4180"
     entrypoint: oauth2_proxy -config /var/tmp/oauth2_proxy/proxy.conf -github-org=${GITHUB_ORG}
   docs:
     image: ${DOCS_IMAGE_NAME}

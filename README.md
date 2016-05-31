@@ -25,13 +25,15 @@ cd <directory-where-our-credentials-are>
 # note that using --rm here means as soon as we exit, the volume is dangling.
 # docker cloud will garbage collect it immediately, destroying our work. So for cloud,
 # use --name creds-holder instead of --rm and NEVER rm the creds-holder container.
-docker run -ti --rm $PWD:/creds-in -v creds:/creds-out busybox sh`
+docker run -ti --rm -v $PWD:/creds-in -v creds:/creds-out busybox sh
 # inside container:
 cp /creds-in/* /creds-out/.
 ls -Fl /creds-out
+exit
 # verify
 docker run -ti --rm -v creds:/creds busybox sh
 ls /creds
+exit
 ```
 * Your host must allow incoming TCP connections on port 443 (used by the GitHub callback) from the public internet.
 
