@@ -1,4 +1,4 @@
-# docs-demo
+# oauth-demo
 Serve up static HTML files using github OAUTH to control access. 
 
 Uses [nginx](http://nginx.org/) to terminate the SSL connections and to serve up pages once the user has authenticated. Uses [oauth2_proxy](https://github.com/bitly/oauth2_proxy) to perform oauth authentication with github, allowing us to restrict access to the web pages.
